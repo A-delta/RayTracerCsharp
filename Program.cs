@@ -10,7 +10,11 @@ using System.Diagnostics ;
             int height=800;
             int width=1200;
 
-            Sphere s = new Sphere(radius: 3, new Vector3(x: 0, 0, -20));
+            List<ObjectInterface> l = new List<ObjectInterface>();
+            l.Add(new Sphere(radius: 3, new Vector3(x: 0, 0, -20)));
+            l.Add(new Sphere(radius: 8, new Vector3(x: 0, 0, -50)));
+            l.Add(new Sphere(radius: 3, new Vector3(x: 3, 0-2, -20)));
+
 
             Renderer rd = new Renderer( 
                 width, 
@@ -20,7 +24,7 @@ using System.Diagnostics ;
                 new Image<Rgb24>(width, height)
                 );
 
-            rd.Render(s);
+            rd.Render(l);
             rd.Save("test.png");
 
         }

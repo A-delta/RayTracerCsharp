@@ -3,7 +3,7 @@ using System.Numerics;
 class Sphere : ObjectInterface {
     public int radius;
     public Vector3 center;
-    public Color color=Color.Black;
+    public Color color=Color.BlanchedAlmond;
     public Sphere(int radius, Vector3 center){
         this.radius = radius;
         this.center=center;
@@ -32,4 +32,5 @@ class Sphere : ObjectInterface {
     }
 
     public bool IsInSphere(Vector3 pos) => Vector3.Distance(center, pos) <= radius;
+    public Color GetColor() => color;
 }

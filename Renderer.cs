@@ -16,7 +16,7 @@ class Renderer {
         this.img=img;
     }
 
-    public void Render(Sphere s) { // one sphere for now
+    public void Render(List<ObjectInterface> objects) { // one sphere for now
     float AspectRatio = width/height;
         for (int i = 0; i < height; i++)
         {
@@ -30,16 +30,27 @@ class Renderer {
             Vector3 direction = new Vector3(x, y, -1);
 
 
-                img[j,i] = CastRay(Vector3.Normalize(direction), s);
+                img[j,i] = CastRay(Vector3.Normalize(direction), objects);
             }
             
         }
     }
 
-    private Rgb24 CastRay(Vector3 direction, Sphere s) {
-        float dist = s.RayIntersect(position, direction);
-        if (dist < 0) return new Rgb24(0,0,0);
-        return new Rgb24(255,255,255);
+    private Rgb24 CastRay(Vector3 direction, List<ObjectInterface> objects) {
+        float dist;
+        float minDist=float.MaxValue;
+        int min = 0;
+
+        for (int i=0; i<objects.Count; i++) {
+            dist = objects[i].RayIntersect(position, direction);
+            if (dist != -1 && minDist>dist) {
+                min=i;
+                minDist = dist;
+            }
+        }
+        if (minDist==float.MaxValue || minDist==-1) return new Rgb24(0,0,0);
+        return objects[min].GetColor();
+
     }
 
     public void Save(string filename) => img.SaveAsPng(filename);

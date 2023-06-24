@@ -8,15 +8,15 @@ using System.Diagnostics ;
     {
         static void Main(string[] args){
             int height=800;
-            int width=1600;
+            int width=1200;
 
-            Sphere s = new Sphere(100, new Vector3(100, 0, 0));
+            Sphere s = new Sphere(radius: 3, new Vector3(x: 0, 0, -20));
 
             Renderer rd = new Renderer( 
                 width, 
                 height, 
                 new Vector3(0,0,0), 
-                new Vector3(1, 0, 0),
+                new Vector3(0, 0, 0),
                 new Image<Rgb24>(width, height)
                 );
 

@@ -9,21 +9,22 @@ class Sphere : ObjectInterface {
         this.center=center;
     }
 
-    public bool RayIntersect(Vector3 origin, Vector3 direction) {
+    public float RayIntersect(Vector3 origin, Vector3 direction) { // negative output = no intersection
 
         Vector3 L = center - origin;
 
-        if (Vector3.Dot(L, direction) <= 0) {
-            return L.Length() <= radius;
-        }
+        if (Vector3.Dot(L, direction) > 0) return -1;
+        
+        
 
         Vector3 H = origin +  Vector3.Dot(L, direction) * direction / direction.LengthSquared();
-        Console.WriteLine(Vector3.Distance(H, center));
-        Console.WriteLine(H);
-        Console.WriteLine(center);
-       return Vector3.Distance(H, center)<=radius; 
+        
 
+       if (Vector3.Distance(H, center)>radius) return -1;
 
+        float d = (float)System.Math.Sqrt(radius*radius - H.LengthSquared());
+        
+        return (H+d*direction - center).Length();
     }
 
     public bool IsInSphere(Vector3 pos) => Vector3.Distance(center, pos) <= radius;

@@ -1,7 +1,4 @@
-﻿using System;
-using SixLabors.ImageSharp;
-using System.Numerics;
-using System.Diagnostics;
+﻿using System.Numerics;
 
 namespace RayTracer
 {

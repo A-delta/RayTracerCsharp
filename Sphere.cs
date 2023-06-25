@@ -2,9 +2,9 @@ using System.Numerics;
 
 class Sphere : ObjectInterface
 {
-    public int radius;
-    public Vector3 center;
-    public Color color = Color.AntiqueWhite;
+    public int radius { get; }
+    public Vector3 center { get; }
+    public Color color { get; set; } = Color.AntiqueWhite;
 
     public Sphere(int radius, Vector3 center)
     {
@@ -43,7 +43,10 @@ class Sphere : ObjectInterface
 
     public bool IsInSphere(Vector3 pos) => Vector3.Distance(center, pos) <= radius;
 
-    public Color GetColor() => color;
+    public Vector3 GetNormalVector(Vector3 origin)
+    {
+        return Vector3.Normalize(origin - center);
+    }
 
     public Vector3 GetCenter() => this.center;
 }

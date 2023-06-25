@@ -77,31 +77,10 @@ class Renderer
         {
             if (inter is not null)
             {
-                /*or (int i = 0; i < objects.Count; i++)
-                {
-                    if (
-                        objects[i].RayIntersectPoint(
-                            (Vector3)inter,
-                            direction: light.position - (Vector3)inter
-                        )
-                        is not null
-                    )
-                        if (
-                            i == min
-                            && objects[i].RayIntersectPoint(
-                                (Vector3)inter,
-                                direction: light.position - (Vector3)inter
-                            ) != inter
-                        )
-                            return bgColor;
-                }*/
-
                 float factor = Math.Max(
-                    (
-                        Vector3.Dot(
-                            Vector3.Normalize(((Vector3)inter) - objects[min].GetCenter()),
-                            Vector3.Normalize(light.position - (Vector3)inter)
-                        )
+                    Vector3.Dot(
+                        objects[min].GetNormalVector((Vector3)inter),
+                        Vector3.Normalize(light.position - (Vector3)inter)
                     ),
                     0
                 );
@@ -109,6 +88,6 @@ class Renderer
             }
         }
 
-        return (Color)((Vector4)objects[min].GetColor() * lightIntensity);
+        return (Color)((Vector4)objects[min].color * lightIntensity);
     }
 }

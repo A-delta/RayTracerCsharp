@@ -27,45 +27,6 @@ class Renderer
     {
         float AspectRatio = width / height;
 
-        //PARALLEL
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
-
-        Parallel.For(
-            0,
-            height,
-            i =>
-            {
-                for (int j = 0; j < width; j++)
-                {
-                    float x = (float)(
-                        (2 * (j + 0.5) / (double)width - 1)
-                        * (System.Math.Tan(fieldViewAngle / 2))
-                        * width
-                        / (float)height
-                    );
-
-                    float y = -(float)(
-                        (2 * (i + 0.5) / (double)height - 1) * System.Math.Tan(fieldViewAngle / 2)
-                    );
-                    Vector3 direction = new Vector3(x, y, -1);
-
-                    img[j, i] = CastRay(Vector3.Normalize(direction), objects, lightSources);
-                }
-            }
-        );
-
-        stopwatch.Stop();
-        Console.Error.WriteLine(
-            "Parallel loop time in milliseconds: {0}",
-            stopwatch.ElapsedMilliseconds
-        );
-
-        // DOUBLE PARALLEL
-        stopwatch.Reset();
-
-        stopwatch.Start();
-
         Parallel.For(
             0,
             height,
@@ -93,42 +54,6 @@ class Renderer
                     }
                 );
             }
-        );
-        stopwatch.Stop();
-        Console.Error.WriteLine(
-            "Double Sequential loop time in milliseconds: {0}",
-            stopwatch.ElapsedMilliseconds
-        );
-
-        //SEQUENTIAL
-        stopwatch.Reset();
-
-        stopwatch.Start();
-
-        for (int i = 0; i < height; i++)
-        {
-            for (int j = 0; j < width; j++)
-            {
-                float x = (float)(
-                    (2 * (j + 0.5) / (double)width - 1)
-                    * (System.Math.Tan(fieldViewAngle / 2))
-                    * width
-                    / (float)height
-                );
-
-                float y = -(float)(
-                    (2 * (i + 0.5) / (double)height - 1) * System.Math.Tan(fieldViewAngle / 2)
-                );
-                Vector3 direction = new Vector3(x, y, -1);
-
-                img[j, i] = CastRay(Vector3.Normalize(direction), objects, lightSources);
-            }
-        }
-
-        stopwatch.Stop();
-        Console.Error.WriteLine(
-            "Sequential loop time in milliseconds: {0}",
-            stopwatch.ElapsedMilliseconds
         );
 
         return img;

@@ -3,7 +3,7 @@ using System.Numerics;
 public class Sphere : ObjectInterface
 {
     public int radius { get; }
-    public Vector3 center { get; }
+    public Vector3 center { get; set; }
     public Color color { get; set; } = Color.AntiqueWhite;
 
     public Sphere(int radius, Vector3 center)

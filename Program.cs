@@ -12,10 +12,13 @@ namespace RayTracer
             int height = 800;
             int width = 1200;
 
-            List<ObjectInterface> l = new List<ObjectInterface>();
-            l.Add(new Sphere(radius: 3, new Vector3(x: 0, 0, -20)));
-            l.Add(new Sphere(radius: 8, new Vector3(x: 0, 0, -50)));
-            l.Add(new Sphere(radius: 3, new Vector3(x: 3, 0 - 2, -20)));
+            List<ObjectInterface> objects = new List<ObjectInterface>();
+            //objects.Add(new Sphere(radius: 3, new Vector3(x: 0, 0, -20)));
+            objects.Add(new Sphere(radius: 35, new Vector3(x: 0, 0, -140)));
+            //objects.Add(new Sphere(radius: 3, new Vector3(x: 3, 0 - 2, -20)));
+
+            List<LightSource> lightSources = new List<LightSource>();
+            lightSources.Add(new LightSource(new Vector3(-200, 20, 20), 1.5f));
 
             Renderer rd = new Renderer(
                 width,
@@ -25,7 +28,7 @@ namespace RayTracer
                 new Image<Rgb24>(width, height)
             );
 
-            rd.Render(l);
+            rd.Render(objects, lightSources);
             rd.Save("test.png");
         }
     }

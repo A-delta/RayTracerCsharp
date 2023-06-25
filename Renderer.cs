@@ -2,24 +2,26 @@ using System.Numerics;
 
 class Renderer
 {
-    public Image<Rgb24> img;
     public double fieldViewAngle = System.Math.PI / 4;
     public Vector3 position;
     public Vector3 roation;
     public int height;
     public int width;
-    private Color bgColor = Color.Turquoise;
+    private Color bgColor = Color.Black;
 
-    public Renderer(int width, int height, Vector3 position, Vector3 roation, Image<Rgb24> img)
+    public Renderer(int width, int height, Vector3 position, Vector3 roation)
     {
         this.height = height;
         this.width = width;
         this.position = position;
         this.roation = new Vector3(0, 0, 0);
-        this.img = img;
     }
 
-    public void Render(List<ObjectInterface> objects, List<LightSource> lightSources)
+    public Image<Rgb24> Render(
+        List<ObjectInterface> objects,
+        List<LightSource> lightSources,
+        Image<Rgb24> img
+    )
     {
         float AspectRatio = width / height;
         for (int i = 0; i < height; i++)
@@ -41,6 +43,7 @@ class Renderer
                 img[j, i] = CastRay(Vector3.Normalize(direction), objects, lightSources);
             }
         }
+        return img;
     }
 
     private Rgb24 CastRay(
@@ -84,16 +87,9 @@ class Renderer
                     0
                 );
                 lightIntensity += light.intensity * factor;
-
-                Console.WriteLine(factor);
-
-                Console.WriteLine(lightIntensity);
-                Console.WriteLine("");
             }
         }
 
         return (Color)((Vector4)objects[min].GetColor() * lightIntensity);
     }
-
-    public void Save(string filename) => img.SaveAsPng(filename);
 }

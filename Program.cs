@@ -12,7 +12,8 @@ namespace RayTracer
             List<ObjectInterface> objects = new List<ObjectInterface>();
 
             List<LightSource> lightSources = new List<LightSource>();
-            lightSources.Add(new LightSource(new Vector3(0, 100, -200), 1f));
+            lightSources.Add(new LightSource(new Vector3(0, 50, -200), 1f));
+            objects.Add(new Sphere(radius: 20, new Vector3(x: 0, y: 71, -200), Color.Yellow));
 
             Renderer rd = new Renderer(width, height, new Vector3(0, 0, 0), new Vector3(0, 0, 0));
 
@@ -42,11 +43,11 @@ namespace RayTracer
 
                 gif.Frames.AddFrame(rd.Render(objects, lightSources, img).Frames.RootFrame);
 
-                objects.RemoveAt(0);
-                objects.RemoveAt(0);
+                objects.RemoveAt(1);
+                objects.RemoveAt(1);
                 Console.WriteLine((float)i / limit);
             }
-            gif.SaveAsGif("test.gif");
+            gif.SaveAsGif("diagonal_spheres.gif");
         }
     }
 }

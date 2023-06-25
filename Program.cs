@@ -9,12 +9,12 @@ namespace RayTracer
     {
         static void Main(string[] args)
         {
-            int height = 800;
-            int width = 1200;
+            int height = 1080;
+            int width = 1920;
 
             List<ObjectInterface> objects = new List<ObjectInterface>();
             //objects.Add(new Sphere(radius: 3, new Vector3(x: 0, 0, -20)));
-            objects.Add(new Sphere(radius: 35, new Vector3(x: 20, 20, -140)));
+            objects.Add(new Sphere(radius: 35, new Vector3(x: 0, 0, -200)));
             //objects.Add(new Sphere(radius: 3, new Vector3(x: 3, 0 - 2, -20)));
 
             List<LightSource> lightSources = new List<LightSource>();

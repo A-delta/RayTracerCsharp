@@ -26,14 +26,15 @@ class Renderer
         {
             for (int j = 0; j < width; j++)
             {
-                float y = -(float)(
-                    (2 * (i + 0.5) / (double)width - 1)
+                float x = (float)(
+                    (2 * (j + 0.5) / (double)width - 1)
                     * (System.Math.Tan(fieldViewAngle / 2))
                     * width
-                    / (double)height
+                    / (float)height
                 );
-                float x = (float)(
-                    (2 * (j + 0.5) / (double)height - 1) * System.Math.Tan(fieldViewAngle / 2)
+
+                float y = -(float)(
+                    (2 * (i + 0.5) / (double)height - 1) * System.Math.Tan(fieldViewAngle / 2)
                 );
                 Vector3 direction = new Vector3(x, y, -1);
 

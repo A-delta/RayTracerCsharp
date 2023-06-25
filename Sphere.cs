@@ -12,6 +12,13 @@ class Sphere : ObjectInterface
         this.center = center;
     }
 
+    public Sphere(int radius, Vector3 center, Color c)
+    {
+        this.radius = radius;
+        this.center = center;
+        this.color = c;
+    }
+
     public Vector3? RayIntersectPoint(Vector3 origin, Vector3 direction)
     {
         Vector3 L = center - origin;

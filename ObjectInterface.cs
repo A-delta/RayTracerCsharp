@@ -1,6 +1,7 @@
 using System.Numerics;
 
-interface ObjectInterface {
+interface ObjectInterface
+{
     public abstract float RayIntersect(Vector3 origin, Vector3 direction);
     public abstract Color GetColor();
 }

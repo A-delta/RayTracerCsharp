@@ -44,4 +44,6 @@ class Sphere : ObjectInterface
     public bool IsInSphere(Vector3 pos) => Vector3.Distance(center, pos) <= radius;
 
     public Color GetColor() => color;
+
+    public Vector3 GetCenter() => this.center;
 }

@@ -6,7 +6,6 @@ public class Sphere : IObject
     public Vector3 center { get; set; }
     public Color color { get; set; } = Color.AntiqueWhite;
 
-
     public Sphere(int radius, Vector3 center)
     {
         this.radius = radius;
@@ -39,7 +38,7 @@ public class Sphere : IObject
     public bool RayIntersect(Vector3 origin, Vector3 direction)
     {
         Vector3? p = RayIntersectPoint(origin, direction);
-        return (p is not null) ? true : false;
+        return p is not null;
     }
 
     public bool IsInSphere(Vector3 pos) => Vector3.Distance(center, pos) <= radius;
@@ -49,5 +48,8 @@ public class Sphere : IObject
         return Vector3.Normalize(origin - center);
     }
 
-    public Vector3 GetCenter() => this.center;
+    public void ApplyForce(Vector3 force)
+    {
+        this.center += force;
+    }
 }

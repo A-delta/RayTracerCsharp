@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Numerics;
 
 public class Renderer
@@ -57,15 +58,12 @@ public class Renderer
         return img;
     }
 
-    private Rgb24 CastRay(
-        Vector3 direction,
-        List<IObject> objects,
-        List<LightSource> lightSources
-    )
+    private Rgb24 CastRay(Vector3 direction, List<IObject> objects, List<LightSource> lightSources)
     {
         Vector3? inter;
         float dist;
         float minDist = float.MaxValue;
+
         int min = 0;
 
         for (int i = 0; i < objects.Count; i++)
@@ -84,6 +82,7 @@ public class Renderer
 
         float lightIntensity = 0;
         inter = objects[min].RayIntersectPoint(position, direction);
+
         foreach (LightSource light in lightSources)
         {
             if (inter is not null)
@@ -95,11 +94,10 @@ public class Renderer
                     ),
                     0
                 );
+
                 lightIntensity += light.intensity * factor;
             }
-            
         }
-
         return (Color)((Vector4)objects[min].color * lightIntensity);
     }
 }

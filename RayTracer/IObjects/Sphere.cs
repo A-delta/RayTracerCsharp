@@ -14,10 +14,11 @@ public class Sphere : IObject
         this.material = material;
     }
 
-    public Sphere(int radius, Vector3 center, Color c)
+    public Sphere(int radius, Vector3 center, Material material, Color c)
     {
         this.radius = radius;
         this.center = center;
+        this.material = material;
         this.color = c;
     }
 

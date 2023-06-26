@@ -80,24 +80,45 @@ public class Renderer
         if (minDist == float.MaxValue || minDist == -1)
             return bgColor;
 
-        float lightIntensity = 0;
         inter = objects[min].RayIntersectPoint(position, direction);
 
+        float AmbientLight = 0;
+        float lightIntensity = objects[min].material.ambientReflection * AmbientLight;
+        float diffuseLight = 0,
+            specularIntensity = 0;
         foreach (LightSource light in lightSources)
         {
             if (inter is not null)
             {
-                float factor = Math.Max(
-                    Vector3.Dot(
-                        objects[min].GetNormalVector((Vector3)inter),
-                        Vector3.Normalize(light.position - (Vector3)inter)
-                    ),
-                    0
-                );
+                // float factor = Math.Max(
+                //     Vector3.Dot(
+                //         objects[min].GetNormalVector((Vector3)inter),
+                //         Vector3.Normalize(light.position - (Vector3)inter)
+                //     ),
+                //     0
+                // );
 
-                lightIntensity += light.intensity * factor;
+                //lightIntensity += light.intensity * factor;
+
+                Vector3 N = objects[min].GetNormalVector((Vector3)inter);
+                Vector3 lightDir = Vector3.Normalize((Vector3)inter - light.position);
+                diffuseLight +=
+                    light.diffuseIntensity
+                    * objects[min].material.diffuseReflection
+                    * Math.Max(0, -Vector3.Dot(lightDir, N));
+
+                Vector3 R = 2 * Math.Min(0, Vector3.Dot(lightDir, N)) * N - lightDir;
+
+                specularIntensity +=
+                    light.specularIntensity
+                    * objects[min].material.specularReflection
+                    * (float)
+                        Math.Pow((double)Vector3.Dot(lightDir, R), objects[min].material.shininess);
             }
         }
-        return (Color)((Vector4)objects[min].color * lightIntensity);
+        return (Color)(
+            (Vector4)objects[min].material.color * diffuseLight
+            + new Vector4(1, 1, 1, 1) * specularIntensity
+        );
     }
 }

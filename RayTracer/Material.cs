@@ -4,17 +4,20 @@ public class Material
         diffuseReflection,
         ambientReflection,
         shininess;
+    public Color color;
 
     public Material(
         float specularReflection,
         float diffuseReflection,
         float ambientReflection,
-        float shininess
+        float shininess,
+        Color color
     )
     {
         this.specularReflection = specularReflection;
         this.diffuseReflection = diffuseReflection;
         this.ambientReflection = ambientReflection;
         this.shininess = shininess;
+        this.color = color;
     }
 }

@@ -1,6 +1,6 @@
 using System.Numerics;
 
-public interface ObjectInterface
+public interface IObject
 {
     public Color color { get; set; }
     public Vector3 center { get; set; }

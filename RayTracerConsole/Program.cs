@@ -9,20 +9,13 @@ namespace RayTracer
             int height = 1080;
             int width = 1920;
 
-            List<ObjectInterface> objects = new List<ObjectInterface>();
+            List<IObject> objects = new List<IObject>();
 
             List<LightSource> lightSources = new List<LightSource>();
             lightSources.Add(new LightSource(new Vector3(0, 50, -200), 1f));
             objects.Add(new Sphere(radius: 20, new Vector3(x: 0, y: 71, -200), Color.Yellow));
 
             Renderer rd = new Renderer(width, height, new Vector3(0, 0, 0), new Vector3(0, 0, 0));
-
-            /*Image<Rgb24> img = new Image<Rgb24>(width, height);
-            objects.Add(new Sphere(30, new Vector3(0, 0, -200), Color.White));
-            rd.Render(objects, lightSources, img);
-            img.SaveAsPng("test.png");*/
-
-
 
             Image<Rgb24> gif = rd.Render(objects, lightSources, new Image<Rgb24>(width, height));
 

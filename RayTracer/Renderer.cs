@@ -18,7 +18,7 @@ public class Renderer
     }
 
     public Image<Rgb24> Render(
-        List<ObjectInterface> objects,
+        List<IObject> objects,
         List<LightSource> lightSources,
         Image<Rgb24> img
     )
@@ -59,7 +59,7 @@ public class Renderer
 
     private Rgb24 CastRay(
         Vector3 direction,
-        List<ObjectInterface> objects,
+        List<IObject> objects,
         List<LightSource> lightSources
     )
     {
@@ -97,6 +97,7 @@ public class Renderer
                 );
                 lightIntensity += light.intensity * factor;
             }
+            
         }
 
         return (Color)((Vector4)objects[min].color * lightIntensity);

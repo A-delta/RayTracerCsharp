@@ -8,13 +8,14 @@ namespace RayTracerLive;
 
 public class Game1 : Game
 {
+    
     GraphicsDeviceManager graphics;
     SpriteBatch spriteBatch;
 
     Texture2D image;
     int height;
     int width;
-    List<ObjectInterface> objects;
+    List<IObject> objects;
     List<LightSource> lightSources;
     Renderer rd;
     System.IO.Stream stream;
@@ -34,7 +35,7 @@ public class Game1 : Game
         graphics.PreferredBackBufferHeight = height; // set this value to the desired height of your window
         graphics.ApplyChanges();
 
-        objects = new List<ObjectInterface>();
+        objects = new List<IObject>();
         objects.Add(
             new Sphere(
                 radius: 15,

@@ -1,4 +1,4 @@
-using System.Numerics;
+/*using System.Numerics;
 
 public class Plane : IObject
 {
@@ -36,11 +36,6 @@ public class Plane : IObject
         Vector3 w = origin - p0;
         return p0 + w + direction * (-Vector3.Dot(n, w) / D);
 
-        /*if (Vector3.Dot(n, direction) == 0)
-            //parallel
-            return (Vector3.Dot(direction - p0, n) == 0) ? origin : null;
-
-        float L = (-1) * Vector3.Dot(n, origin - p0) / Vector3.Dot(n, Vector3.Normalize(direction));
-        return origin + direction * L;*/
+        
     }
-}
+}*/

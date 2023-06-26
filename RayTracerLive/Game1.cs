@@ -8,7 +8,6 @@ namespace RayTracerLive;
 
 public class Game1 : Game
 {
-    
     GraphicsDeviceManager graphics;
     SpriteBatch spriteBatch;
 
@@ -83,22 +82,22 @@ public class Game1 : Game
 
         if (Keyboard.GetState().IsKeyDown(Keys.Down))
         {
-            objects[0].center += new System.Numerics.Vector3(0, -1, 0);
+            objects[0].ApplyForce(new System.Numerics.Vector3(0, -1, 0));
             LoadContent();
         }
         if (Keyboard.GetState().IsKeyDown(Keys.Up))
         {
-            objects[0].center += new System.Numerics.Vector3(0, +1, 0);
+            objects[0].ApplyForce(new System.Numerics.Vector3(0, +1, 0));
             LoadContent();
         }
         if (Keyboard.GetState().IsKeyDown(Keys.Left))
         {
-            objects[0].center += new System.Numerics.Vector3(-1, 0, 0);
+            objects[0].ApplyForce(new System.Numerics.Vector3(-1, 0, 0));
             LoadContent();
         }
         if (Keyboard.GetState().IsKeyDown(Keys.Right))
         {
-            objects[0].center += new System.Numerics.Vector3(1, 0, 0);
+            objects[0].ApplyForce(new System.Numerics.Vector3(1, 0, 0));
             LoadContent();
         }
         base.Update(gameTime);

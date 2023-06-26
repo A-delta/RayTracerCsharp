@@ -13,7 +13,7 @@ namespace RayTracer
             List<IObject> objects = new List<IObject>();
 
             List<LightSource> lightSources = new List<LightSource>();
-            lightSources.Add(new LightSource(new Vector3(0, y: 100, 0), 1f));
+            lightSources.Add(new LightSource(new Vector3(0, y: 100, 0), 1f, 1f));
 
             objects.Add(
                 new Sphere(radius: 16, new Vector3(x: 0, 0, -80), new Material(1, 1, 1, 1))

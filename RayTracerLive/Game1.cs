@@ -34,17 +34,13 @@ public class Game1 : Game
         graphics.PreferredBackBufferHeight = height; // set this value to the desired height of your window
         graphics.ApplyChanges();
 
+        Material m = new Material(.3f, .6f, 0f, 1f, SixLabors.ImageSharp.Color.AliceBlue);
+
         objects = new List<IObject>();
-        objects.Add(
-            new Sphere(
-                radius: 15,
-                new System.Numerics.Vector3(x: 0, y: 50, -200),
-                SixLabors.ImageSharp.Color.Yellow
-            )
-        );
+        objects.Add(new Sphere(radius: 15, new System.Numerics.Vector3(x: 0, y: 50, -200), m));
 
         lightSources = new List<LightSource>();
-        lightSources.Add(new LightSource(new System.Numerics.Vector3(0, 50, 0), 1f));
+        lightSources.Add(new LightSource(new System.Numerics.Vector3(0, 50, 0), 1f, 1f));
 
         rd = new Renderer(
             width,

@@ -19,5 +19,7 @@ public class Material
         this.ambientReflection = ambientReflection;
         this.shininess = shininess;
         this.color = color;
+        
     }
+
 }

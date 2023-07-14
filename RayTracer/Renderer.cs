@@ -61,6 +61,7 @@ public class Renderer
     private Rgb24 CastRay(Vector3 direction, List<IObject> objects, List<LightSource> lightSources)
     {
         Vector3? inter;
+        Vector3? minInter = null;
         float dist;
         float minDist = float.MaxValue;
 
@@ -74,13 +75,17 @@ public class Renderer
                 continue;
 
             dist = ((Vector3)inter - position).Length();
-            min = i;
-            minDist = dist;
+            if (dist < minDist)
+            {
+                minInter = inter;
+                min = i;
+                minDist = dist;
+            }
         }
         if (minDist == float.MaxValue || minDist == -1)
             return bgColor;
 
-        inter = objects[min].RayIntersectPoint(position, direction);
+        inter = minInter;
 
         float AmbientLight = 0;
         float lightIntensity = objects[min].material.ambientReflection * AmbientLight;
@@ -90,16 +95,6 @@ public class Renderer
         {
             if (inter is not null)
             {
-                // float factor = Math.Max(
-                //     Vector3.Dot(
-                //         objects[min].GetNormalVector((Vector3)inter),
-                //         Vector3.Normalize(light.position - (Vector3)inter)
-                //     ),
-                //     0
-                // );
-
-                //lightIntensity += light.intensity * factor;
-
                 Vector3 N = objects[min].GetNormalVector((Vector3)inter);
                 Vector3 lightDir = Vector3.Normalize((Vector3)inter - light.position);
                 diffuseLight +=

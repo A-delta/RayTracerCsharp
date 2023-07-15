@@ -37,7 +37,7 @@ public class Material
                 specularComponent.Z = float.Parse(components[2][2]);
                 specularComponent.W = 0;
 
-                shininess = float.Parse(components[3][0]);
+                shininess = 128 * float.Parse(components[3][0]);
                 return;
             }
             throw new Exception("This material isn't listed");

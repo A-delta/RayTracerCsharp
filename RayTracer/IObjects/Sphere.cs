@@ -50,4 +50,8 @@ public class Sphere : IObject
     {
         return Vector3.Normalize(origin - center);
     }
+
+    public void ApplyForce(Vector3 force) => center += force;
+
+    public void SetPosition(Vector3 newPosition) => center = newPosition;
 }

@@ -8,7 +8,7 @@ public class Renderer
     public Vector3 roation;
     public int height;
     public int width;
-    private Color bgColor = Color.Black;
+    private Color bgColor = Color.DarkGray;
 
     public Renderer(int width, int height, Vector3 position, Vector3 roation)
     {
@@ -67,6 +67,16 @@ public class Renderer
 
         int min = 0;
 
+        // fix to see light sources, should make it clean by attaching spheres to light sources ? or just IObjects
+        foreach (var l in lightSources)
+        {
+            Sphere s = new Sphere(.3f, l.position, null);
+            if (s.RayIntersect(position, direction))
+            {
+                return new Rgb24(255, 255, 255);
+            }
+        }
+
         for (int i = 0; i < objects.Count; i++)
         {
             inter = objects[i].RayIntersectPoint(position, direction);
@@ -88,7 +98,7 @@ public class Renderer
         inter = minInter;
         Material objectMaterial = objects[min].material;
 
-        Vector3 N = objects[min].GetNormalVector(position);
+        Vector3 N = objects[min].GetNormalVector((Vector3)inter);
 
         Vector4 totalLight = new Vector4(0, 0, 0, 1);
         foreach (LightSource light in lightSources)
@@ -110,6 +120,7 @@ public class Renderer
                     * light.SpecularComponent;
             }
         }
+
         return (Color)(totalLight);
     }
 }

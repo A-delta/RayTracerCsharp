@@ -2,19 +2,19 @@ using System.Numerics;
 
 public class Sphere : IObject
 {
-    public int radius { get; }
+    public float radius { get; }
     public Material material { get; set; }
     public Vector3 center { get; set; }
     public Color color { get; set; } = Color.AntiqueWhite;
 
-    public Sphere(int radius, Vector3 center, Material material)
+    public Sphere(float radius, Vector3 center, Material material)
     {
         this.radius = radius;
         this.center = center;
         this.material = material;
     }
 
-    public Sphere(int radius, Vector3 center, Material material, Color c)
+    public Sphere(float radius, Vector3 center, Material material, Color c)
     {
         this.radius = radius;
         this.center = center;

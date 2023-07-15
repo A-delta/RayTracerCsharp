@@ -7,50 +7,41 @@ namespace RayTracer
     {
         static void Main(string[] args)
         {
-            int height = 800;
+            int height = 1080;
             int width = height * 16 / 9;
 
             List<IObject> objects = new List<IObject>()
             {
-                new Sphere(15, new Vector3(0, 0, -60), new Material("emerald")),
-                new Sphere(22, new Vector3(0, 0, 0), new Material("chrome")),
-                new Sphere(28, new Vector3(0, 0, 0), new Material("blackrubber"))
+                new Sphere(5, new Vector3(-30, 0, 0), new Material("ruby")),
+                new Sphere(5, new Vector3(-15, 0, 0), new Material("gold")),
+                new Sphere(5, new Vector3(0, 0, 0), new Material("emerald")),
+                new Sphere(5, new Vector3(15, 0, 0), new Material("greenrubber")),
+                new Sphere(5, new Vector3(30, 0, 0), new Material("obsidian")),
             };
             List<LightSource> lightSources = new List<LightSource>()
             {
-                // new LightSource()
-                // {
-                //     position = new Vector3(0, 0, 100),
-                //     ambientComponent = new Vector4(.2f, .2f, .2f, 1f),
-                //     DiffuseComponent = new Vector4(1f, 1f, 1f, 1f),
-                //     SpecularComponent = new Vector4(1f, 1f, 1f, 1f)
-                // },
                 new LightSource()
                 {
-                    position = new Vector3(0, 0, 0),
+                    position = new Vector3(0, 10, 0),
                     ambientComponent = new Vector4(.2f, .2f, .2f, 1f),
                     DiffuseComponent = new Vector4(1f, 1f, 1f, 1f),
                     SpecularComponent = new Vector4(1f, 1f, 1f, 1f)
                 }
             };
-
-            SimpleAnimation(objects, lightSources, width, height);
+            Renderer rd = new Renderer(width, height, new Vector3(0, 0, 50), new Vector3(0, 0, 0));
+            rd.Render(objects, lightSources, new Image<Rgb24>(width, height))
+                .SaveAsPng("test_position_camera.png");
+            //SimpleAnimation(rd, objects, lightSources, width, height);
         }
 
         private static void SimpleAnimation(
+            Renderer rd,
             List<IObject> objects,
             List<LightSource> lightSources,
             int width,
             int height
         )
         {
-            Renderer rd = new Renderer(
-                width,
-                height,
-                new Vector3(0, 50, 200),
-                new Vector3(0, 0, 0)
-            );
-
             Image<Rgb24> img;
             Image<Rgb24> gif = rd.Render(objects, lightSources, new Image<Rgb24>(width, height));
             var gifMetaData = gif.Metadata.GetGifMetadata();
@@ -66,13 +57,13 @@ namespace RayTracer
             {
                 Console.WriteLine(i);
                 //the actual animation :
-                objects[0].SetPosition(new Vector3(i, 0, limit / 2 - i));
-                objects[1].SetPosition(new Vector3(limit / 2 - i, 0, i));
-                objects[2].SetPosition(new Vector3(i, 0, i));
+                lightSources[0].position = new Vector3(i, 10, i);
+                // end animation
 
                 img = new Image<Rgb24>(width, height);
                 metadata = img.Frames.RootFrame.Metadata.GetGifMetadata();
-                metadata.FrameDelay = 4;
+
+                metadata.FrameDelay = 1;
                 gif.Frames.AddFrame(rd.Render(objects, lightSources, img).Frames.RootFrame);
             }
             stopWatch.Stop();

@@ -8,7 +8,7 @@ public class Renderer
     public Vector3 roation;
     public int height;
     public int width;
-    private Color bgColor = Color.DarkGray;
+    private Color bgColor = Color.LightGreen;
 
     public Renderer(int width, int height, Vector3 position, Vector3 roation)
     {
@@ -24,12 +24,9 @@ public class Renderer
         Image<Rgb24> img
     )
     {
-        float x,
-            y;
-        Vector3 direction;
-        float AspectRatio = width / height;
+        float AspectRatio = (float)width / height;
+        float theta = (float)System.Math.Tan(fieldViewAngle / 2);
 
-        double theta = System.Math.Tan(fieldViewAngle / 2);
         Parallel.For(
             0,
             height,
@@ -40,9 +37,10 @@ public class Renderer
                     width,
                     j =>
                     {
-                        x = (float)((2 * (j + 0.5) / (double)width - 1) * theta * AspectRatio);
-                        y = -(float)((2 * (i + 0.5) / (double)height - 1) * theta);
-                        direction = new Vector3(x, y, -1);
+                        float x = ((2 * (j + 0.5f) / width - 1) * theta * AspectRatio);
+
+                        float y = -((2 * (i + 0.5f) / height - 1) * theta);
+                        Vector3 direction = new Vector3(x, y, -1);
 
                         img[j, i] = CastRay(Vector3.Normalize(direction), objects, lightSources);
                     }

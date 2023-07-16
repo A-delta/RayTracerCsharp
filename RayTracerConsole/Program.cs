@@ -12,8 +12,12 @@ namespace RayTracer
 
         private static void Animation5Boules()
         {
+            // 3000
             // 4.1458502345971855 fps
             //Size:28360612K  Cpu:427%  Elapsed:489.47
+
+
+
 
             int height = 3000;
             int width = height * 16 / 9;
@@ -77,7 +81,7 @@ namespace RayTracer
             TimeSpan ts = stopWatch.Elapsed;
             Console.WriteLine((2 * limit / step) / ts.TotalSeconds + " fps"); //total frames / total seconds
 
-            gif.SaveAsGif("output.gif");
+            //gif.SaveAsGif("output.gif");
         }
     }
 }

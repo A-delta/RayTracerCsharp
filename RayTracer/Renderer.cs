@@ -24,8 +24,12 @@ public class Renderer
         Image<Rgb24> img
     )
     {
+        float x,
+            y;
+        Vector3 direction;
         float AspectRatio = width / height;
 
+        double theta = System.Math.Tan(fieldViewAngle / 2);
         Parallel.For(
             0,
             height,
@@ -36,18 +40,9 @@ public class Renderer
                     width,
                     j =>
                     {
-                        float x = (float)(
-                            (2 * (j + 0.5) / (double)width - 1)
-                            * (System.Math.Tan(fieldViewAngle / 2))
-                            * width
-                            / (float)height
-                        );
-
-                        float y = -(float)(
-                            (2 * (i + 0.5) / (double)height - 1)
-                            * System.Math.Tan(fieldViewAngle / 2)
-                        );
-                        Vector3 direction = new Vector3(x, y, -1);
+                        x = (float)((2 * (j + 0.5) / (double)width - 1) * theta * AspectRatio);
+                        y = -(float)((2 * (i + 0.5) / (double)height - 1) * theta);
+                        direction = new Vector3(x, y, -1);
 
                         img[j, i] = CastRay(Vector3.Normalize(direction), objects, lightSources);
                     }
@@ -60,31 +55,34 @@ public class Renderer
 
     private Rgb24 CastRay(Vector3 direction, List<IObject> objects, List<LightSource> lightSources)
     {
-        Vector3? inter;
-        Vector3? minInter = null;
+        Vector3? potentialIntersection;
+        bool isInter = false;
+        Vector3 inter;
+        Vector3 minInter = new Vector3(0, 0, 0);
         float dist;
         float minDist = float.MaxValue;
 
         int min = 0;
 
         // fix to see light sources, should make it clean by attaching spheres to light sources ? or just IObjects
-        foreach (var l in lightSources)
+        /*foreach (var l in lightSources)
         {
             Sphere s = new Sphere(.3f, l.position, null);
             if (s.RayIntersect(position, direction))
             {
                 return new Rgb24(255, 255, 255);
             }
-        }
+        }*/
 
         for (int i = 0; i < objects.Count; i++)
         {
-            inter = objects[i].RayIntersectPoint(position, direction);
+            potentialIntersection = objects[i].RayIntersectPoint(position, direction);
 
-            if (inter is null)
+            if (potentialIntersection is null)
                 continue;
-
-            dist = ((Vector3)inter - position).Length();
+            isInter = true;
+            inter = (Vector3)potentialIntersection;
+            dist = (inter - position).Length();
             if (dist < minDist)
             {
                 minInter = inter;
@@ -92,33 +90,32 @@ public class Renderer
                 minDist = dist;
             }
         }
-        if (minDist == float.MaxValue || minDist == -1)
+        if (!isInter)
             return bgColor;
 
         inter = minInter;
+
         Material objectMaterial = objects[min].material;
-
-        Vector3 N = objects[min].GetNormalVector((Vector3)inter);
-
+        Vector3 N = objects[min].GetNormalVector(inter);
+        Vector3 V,
+            lightDir,
+            R;
+        float lightDotN;
         Vector4 totalLight = new Vector4(0, 0, 0, 1);
         foreach (LightSource light in lightSources)
         {
-            if (inter is not null)
-            {
-                Vector3 V = Vector3.Normalize((Vector3)inter - position);
-                Vector3 lightDir = Vector3.Normalize((Vector3)inter - light.position);
-                Vector3 R = Vector3.Normalize(2 * Vector3.Dot(lightDir, N) * N - lightDir);
+            V = Vector3.Normalize(inter - position);
+            lightDir = Vector3.Normalize(inter - light.position);
+            lightDotN = Vector3.Dot(lightDir, N);
+            R = Vector3.Normalize(2 * lightDotN * N - lightDir);
 
-                totalLight +=
-                    objectMaterial.diffuseComponent
-                    * Math.Max(Vector3.Dot(-lightDir, N), 0)
-                    * light.DiffuseComponent;
+            totalLight +=
+                objectMaterial.diffuseComponent * Math.Max(-lightDotN, 0) * light.DiffuseComponent;
 
-                totalLight +=
-                    objectMaterial.specularComponent
-                    * (float)Math.Pow(Math.Max(0, Vector3.Dot(R, V)), objectMaterial.shininess)
-                    * light.SpecularComponent;
-            }
+            totalLight +=
+                objectMaterial.specularComponent
+                * (float)Math.Pow(Math.Max(0, Vector3.Dot(R, V)), objectMaterial.shininess)
+                * light.SpecularComponent;
         }
 
         return (Color)(totalLight);

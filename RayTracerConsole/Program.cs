@@ -7,118 +7,107 @@ namespace RayTracer
     {
         static void Main(string[] args)
         {
-            Animation5Boules2();
-        }
-
-        private static void Animation5Boules2()
-        {
-            // 257 --> 256.34820302971616 fps
-            //
-            int height = 500;
+            int height = 1080;
             int width = height * 16 / 9;
+            Renderer rd = new Renderer(width, height, new Vector3(0, 0, 100), new Vector3(0, 0, 0));
 
-            List<IObject> objects = new List<IObject>()
-            {
-                new Sphere(5, new Vector3(-30, 0, 0), new Material("ruby")),
-                new Sphere(5, new Vector3(-15, 0, 0), new Material("gold")),
-                new Sphere(5, new Vector3(0, 0, 0), new Material("emerald")),
-                new Sphere(5, new Vector3(15, 0, 0), new Material("greenrubber")),
-                new Sphere(5, new Vector3(30, 0, 0), new Material("obsidian")),
-            };
-            List<LightSource> lightSources = new List<LightSource>()
-            {
+            List<IObject> objects = GetAxis(50f);
+            objects.Add(new Sphere(15f, new Vector3(50f, 20f, -16f), new Material("greenrubber")));
+            objects.Add(new Sphere(15f, new Vector3(-20f, 10f, -5f), new Material("emerald")));
+            objects.Add(new Sphere(4f, new Vector3(0, 0, 0), new Material("ruby")));
+
+            List<LightSource> lights = new List<LightSource>();
+
+            lights.Add(
                 new LightSource()
                 {
-                    position = new Vector3(0, 10, 0),
-                    ambientComponent = new Vector4(.2f, .2f, .2f, 1f),
+                    position = new Vector3(50, -50 / 2, 0),
+                    ambientComponent = new Vector4(.2f, .2f, .2f, .2f),
                     DiffuseComponent = new Vector4(1f, 1f, 1f, 1f),
-                    SpecularComponent = new Vector4(1f, 1f, 1f, 1f)
+                    SpecularComponent = new Vector4(1f, 1f, 1f, 1f),
                 }
-            };
-            Renderer rd = new Renderer(width, height, new Vector3(0, 0, 50), new Vector3(0, 0, 0));
-            //rd.Render(objects, lightSources, new Image<Rgb24>(width, height)).SaveAsPng("test_position_camera.png");
-            SimpleAnimation(rd, objects, lightSources, width, height);
-        }
-
-        private static void Animation5Boules1()
-        {
-            // 4.1458502345971855 fps
-            //Size:28360612K  Cpu:427%  Elapsed:489.47
-
-
-
-
-            int height = 3000;
-            int width = height * 16 / 9;
-
-            List<IObject> objects = new List<IObject>()
-            {
-                new Sphere(5, new Vector3(-30, 0, 0), new Material("ruby")),
-                new Sphere(5, new Vector3(-15, 0, 0), new Material("gold")),
-                new Sphere(5, new Vector3(0, 0, 0), new Material("emerald")),
-                new Sphere(5, new Vector3(15, 0, 0), new Material("greenrubber")),
-                new Sphere(5, new Vector3(30, 0, 0), new Material("obsidian")),
-            };
-            List<LightSource> lightSources = new List<LightSource>()
-            {
+            );
+            lights.Add(
                 new LightSource()
                 {
-                    position = new Vector3(0, 10, 0),
-                    ambientComponent = new Vector4(.2f, .2f, .2f, 1f),
+                    position = new Vector3(0, -30 / 2, 0),
+                    ambientComponent = new Vector4(.2f, .2f, .2f, .2f),
                     DiffuseComponent = new Vector4(1f, 1f, 1f, 1f),
-                    SpecularComponent = new Vector4(1f, 1f, 1f, 1f)
+                    SpecularComponent = new Vector4(1f, 1f, 1f, 1f),
                 }
-            };
-            Renderer rd = new Renderer(width, height, new Vector3(0, 0, 50), new Vector3(0, 0, 0));
-            //rd.Render(objects, lightSources, new Image<Rgb24>(width, height)).SaveAsPng("test_position_camera.png");
-            SimpleAnimation(rd, objects, lightSources, width, height);
+            );
+
+            lights.Add(
+                new LightSource()
+                {
+                    position = new Vector3(-4f, 10f, -5f),
+                    ambientComponent = new Vector4(.2f, .2f, .2f, .2f),
+                    DiffuseComponent = new Vector4(1f, 1f, 1f, 1f),
+                    SpecularComponent = new Vector4(1f, 1f, 1f, 1f),
+                }
+            );
+
+            //AddRectangularLight(lights, .01f, .1f, new Vector3(-30, 15, 0), new Vector3(0, 15, 0));
+
+            Image<Rgb24> img = rd.Render(objects, lights, new Image<Rgb24>(width, height));
+            img.SaveAsPng("output.png");
         }
 
-        private static void SimpleAnimation(
-            Renderer rd,
-            List<IObject> objects,
-            List<LightSource> lightSources,
-            int width,
-            int height
+        private static void AddRectangularLight(
+            List<LightSource> lights,
+            float lightlevel,
+            float step,
+            Vector3 start,
+            Vector3 end
         )
         {
-            Image<Rgb24> img;
-            Image<Rgb24> gif = rd.Render(objects, lightSources, new Image<Rgb24>(width, height));
-            var gifMetaData = gif.Metadata.GetGifMetadata();
-            var metadata = gif.Frames.RootFrame.Metadata.GetGifMetadata();
+            Vector3 direction = (end - start);
 
-            int limit = 300;
-            float step = .1f;
+            direction = direction * step / direction.Length();
 
-            double sum = 0;
-            for (int j = 0; j < 25; j++)
+            Vector3 tmp = start;
+            while ((end - tmp).Length() > .1f)
             {
-                Stopwatch stopWatch = new Stopwatch();
-                stopWatch.Start();
-
-                for (int i = -limit; i < limit; i += 1)
-                {
-                    //Console.WriteLine((i + limit) / (float)(2 * limit) + "%");
-
-                    //the actual animation :
-                    lightSources[0].position = new Vector3(i * step, 10, 0);
-                    // end animation
-                    img = new Image<Rgb24>(width, height);
-                    rd.Render(objects, lightSources, img);
-
-                    /*img = new Image<Rgb24>(width, height);
-                    metadata = img.Frames.RootFrame.Metadata.GetGifMetadata();
-
-                    metadata.FrameDelay = 1;
-                    gif.Frames.AddFrame(rd.Render(objects, lightSources, img).Frames.RootFrame);*/
-                }
-                stopWatch.Stop();
-                TimeSpan ts = stopWatch.Elapsed;
-                Console.WriteLine((2 * limit) / ts.TotalSeconds + " fps");
-                sum += (2 * limit) / ts.TotalSeconds;
-                //gif.SaveAsGif("output.gif");
+                lights.Add(
+                    new LightSource()
+                    {
+                        position = tmp,
+                        ambientComponent = new Vector4(
+                            lightlevel / 10,
+                            lightlevel / 10,
+                            lightlevel / 10,
+                            lightlevel / 10
+                        ),
+                        DiffuseComponent = new Vector4(
+                            lightlevel,
+                            lightlevel,
+                            lightlevel,
+                            lightlevel
+                        ),
+                        SpecularComponent = new Vector4(
+                            lightlevel,
+                            lightlevel,
+                            lightlevel,
+                            lightlevel
+                        ),
+                    }
+                );
+                tmp += direction;
             }
-            Console.WriteLine(sum / 25.0);
+        }
+
+        private static List<IObject> GetAxis(float point)
+        {
+            return new List<IObject>()
+            {
+                new Sphere(1f, new Vector3(0, 0, 0), new Material("blackrubber")),
+                new Sphere(1f, new Vector3(point, 0, 0), new Material("blackrubber")),
+                new Sphere(1f, new Vector3(-point, 0, 0), new Material("blackrubber")),
+                new Sphere(1f, new Vector3(0, point / 2, 0), new Material("blackrubber")),
+                new Sphere(1f, new Vector3(0, -point / 2, 0), new Material("blackrubber")),
+                new Sphere(1f, new Vector3(0, 0, -point), new Material("blackrubber")),
+                new Sphere(1f, new Vector3(0, 0, point), new Material("blackrubber")),
+            };
         }
     }
 }

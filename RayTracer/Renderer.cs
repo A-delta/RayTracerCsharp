@@ -8,7 +8,7 @@ public class Renderer
     public Vector3 roation;
     public int height;
     public int width;
-    private Color bgColor = Color.LightGreen;
+    private Color bgColor = Color.DarkBlue;
 
     public Renderer(int width, int height, Vector3 position, Vector3 roation)
     {
@@ -62,22 +62,22 @@ public class Renderer
 
         int min = 0;
 
-        // fix to see light sources, should make it clean by attaching spheres to light sources ? or just IObjects
-        /*foreach (var l in lightSources)
+        //fix to see light sources, should make it clean by attaching spheres to light sources ? or just IObjects
+        foreach (var l in lightSources)
         {
             Sphere s = new Sphere(.3f, l.position, null);
             if (s.RayIntersect(position, direction))
             {
                 return new Rgb24(255, 255, 255);
             }
-        }*/
+        }
 
         for (int i = 0; i < objects.Count; i++)
         {
             potentialIntersection = objects[i].RayIntersectPoint(position, direction);
-
             if (potentialIntersection is null)
                 continue;
+
             isInter = true;
             inter = (Vector3)potentialIntersection;
             dist = (inter - position).Length();
@@ -93,6 +93,7 @@ public class Renderer
 
         inter = minInter;
 
+        bool inShadow = false;
         Material objectMaterial = objects[min].material;
         Vector3 N = objects[min].GetNormalVector(inter);
         Vector3 V,
@@ -104,6 +105,21 @@ public class Renderer
         {
             V = Vector3.Normalize(inter - position);
             lightDir = Vector3.Normalize(inter - light.position);
+            inShadow = false;
+            // shadows
+            for (int i = 0; i < objects.Count(); i++)
+            {
+                if (i != min && objects[i].RayIntersect(light.position, lightDir))
+                {
+                    inShadow = true;
+                    break;
+                }
+            }
+            if (inShadow)
+            {
+                continue;
+            }
+
             lightDotN = Vector3.Dot(lightDir, N);
             R = Vector3.Normalize(2 * lightDotN * N - lightDir);
 
@@ -114,6 +130,8 @@ public class Renderer
                 objectMaterial.specularComponent
                 * (float)Math.Pow(Math.Max(0, Vector3.Dot(R, V)), objectMaterial.shininess)
                 * light.SpecularComponent;
+
+            totalLight += light.ambientComponent * objectMaterial.ambientComponent;
         }
 
         return (Color)(totalLight);

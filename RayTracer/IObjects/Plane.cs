@@ -1,16 +1,17 @@
-/*using System.Numerics;
+using System.Numerics;
 
 public class Plane : IObject
 {
-    public Color color { get; set; } = Color.White;
+    public Material material { get; set; }
 
     public Vector3 n;
     public Vector3 p0;
 
-    public Plane(Vector3 n, Vector3 p0)
+    public Plane(Vector3 n, Vector3 p0, Material material)
     {
         this.n = n;
         this.p0 = p0;
+        this.material = material;
     }
 
     public void ApplyForce(Vector3 force)
@@ -20,7 +21,7 @@ public class Plane : IObject
 
     public Vector3 GetNormalVector(Vector3 point)
     {
-        return n;
+        return point - Vector3.Dot(Vector3.Normalize(point), n) * n;
     }
 
     public bool RayIntersect(Vector3 origin, Vector3 direction)
@@ -35,7 +36,10 @@ public class Plane : IObject
             return null;
         Vector3 w = origin - p0;
         return p0 + w + direction * (-Vector3.Dot(n, w) / D);
-
-        
     }
-}*/
+
+    public void SetPosition(Vector3 newPosition)
+    {
+        p0 = newPosition;
+    }
+}

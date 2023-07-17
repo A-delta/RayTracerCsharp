@@ -42,7 +42,13 @@ public class Renderer
                         float y = -((2 * (i + 0.5f) / height - 1) * theta);
                         Vector3 direction = new Vector3(x, y, -1);
 
-                        img[j, i] = CastRay(Vector3.Normalize(direction), objects, lightSources);
+                        img[j, i] = CastRay(
+                            position,
+                            Vector3.Normalize(direction),
+                            objects,
+                            lightSources,
+                            0
+                        );
                     }
                 );
             }
@@ -51,7 +57,13 @@ public class Renderer
         return img;
     }
 
-    private Rgb24 CastRay(Vector3 direction, List<IObject> objects, List<LightSource> lightSources)
+    private Rgb24 CastRay(
+        Vector3 origin,
+        Vector3 direction,
+        List<IObject> objects,
+        List<LightSource> lightSources,
+        int depth
+    )
     {
         Vector3? potentialIntersection;
         bool isInter = false;
@@ -66,7 +78,7 @@ public class Renderer
         foreach (var l in lightSources)
         {
             Sphere s = new Sphere(.3f, l.position, null);
-            if (s.RayIntersect(position, direction))
+            if (s.RayIntersect(origin, direction))
             {
                 return new Rgb24(255, 255, 255);
             }
@@ -74,13 +86,13 @@ public class Renderer
 
         for (int i = 0; i < objects.Count; i++)
         {
-            potentialIntersection = objects[i].RayIntersectPoint(position, direction);
+            potentialIntersection = objects[i].RayIntersectPoint(origin, direction);
             if (potentialIntersection is null)
                 continue;
 
             isInter = true;
             inter = (Vector3)potentialIntersection;
-            dist = (inter - position).Length();
+            dist = (inter - origin).Length();
             if (dist < minDist)
             {
                 minInter = inter;
@@ -88,12 +100,13 @@ public class Renderer
                 minDist = dist;
             }
         }
-        if (!isInter)
+        if (!isInter || depth > 8)
             return bgColor;
 
         inter = minInter;
 
         bool inShadow = false;
+
         Material objectMaterial = objects[min].material;
         Vector3 N = objects[min].GetNormalVector(inter);
         Vector3 V,
@@ -101,9 +114,18 @@ public class Renderer
             R;
         float lightDotN;
         Vector4 totalLight = new Vector4(0, 0, 0, 1);
+
+        // reflections
+        Vector3 reflectedRay = direction - 2f * N * Vector3.Dot(N, direction);
+        //reflectedRay=(Vector3.Dot(reflectedRay, N)<0) ?
+        Vector4 reflectionColor = CastRay(inter, reflectedRay, objects, lightSources, depth + 1)
+            .ToVector4();
+        totalLight += reflectionColor * objectMaterial.albedo;
+
+        // lights contributions
         foreach (LightSource light in lightSources)
         {
-            V = Vector3.Normalize(inter - position);
+            V = Vector3.Normalize(inter - origin);
             lightDir = Vector3.Normalize(inter - light.position);
             inShadow = false;
             // shadows

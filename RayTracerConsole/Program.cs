@@ -11,10 +11,13 @@ namespace RayTracer
             int width = height * 16 / 9;
             Renderer rd = new Renderer(width, height, new Vector3(0, 0, 100), new Vector3(0, 0, 0));
 
-            List<IObject> objects = GetAxis(50f);
-            objects.Add(new Sphere(15f, new Vector3(50f, 20f, -16f), new Material("greenrubber")));
+            //List<IObject> objects = GetAxis(50f);
+            List<IObject> objects = new List<IObject>();
+            objects.Add(new Sphere(15f, new Vector3(50f, 20f, -16f), new Material("obsidian")));
             objects.Add(new Sphere(15f, new Vector3(-20f, 10f, -5f), new Material("emerald")));
             objects.Add(new Sphere(4f, new Vector3(0, 0, 0), new Material("ruby")));
+
+            objects.Add(new Sphere(4f, new Vector3(15f, 10f, 35), new Material("copper")));
 
             List<LightSource> lights = new List<LightSource>();
 
@@ -37,17 +40,7 @@ namespace RayTracer
                 }
             );
 
-            lights.Add(
-                new LightSource()
-                {
-                    position = new Vector3(-4f, 10f, -5f),
-                    ambientComponent = new Vector4(.2f, .2f, .2f, .2f),
-                    DiffuseComponent = new Vector4(1f, 1f, 1f, 1f),
-                    SpecularComponent = new Vector4(1f, 1f, 1f, 1f),
-                }
-            );
-
-            AddRectangularLight(lights, .01f, .1f, new Vector3(-30, 15, 0), new Vector3(0, 15, 0));
+            //AddRectangularLight(lights, .5f, new Vector3(-30, 20, 50), new Vector3(0, 30, -20));
 
             Image<Rgb24> img = rd.Render(objects, lights, new Image<Rgb24>(width, height));
             img.SaveAsPng("output.png");
@@ -55,7 +48,7 @@ namespace RayTracer
 
         private static void AddRectangularLight(
             List<LightSource> lights,
-            float lightlevel,
+            //float lightlevel,
             float step,
             Vector3 start,
             Vector3 end
@@ -63,10 +56,12 @@ namespace RayTracer
         {
             Vector3 direction = (end - start);
 
+            float lightlevel = step * .1f;
+
             direction = direction * step / direction.Length();
 
             Vector3 tmp = start;
-            while ((end - tmp).Length() > .1f)
+            while ((end - tmp).Length() > step)
             {
                 lights.Add(
                     new LightSource()

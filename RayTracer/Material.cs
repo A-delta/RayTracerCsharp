@@ -6,7 +6,8 @@ public class Material
     public Vector4 emissiveComponent,
         specularComponent,
         ambientComponent,
-        diffuseComponent;
+        diffuseComponent,
+        albedo;
     public float shininess;
 
     public Material(string materialName)
@@ -38,6 +39,7 @@ public class Material
                 specularComponent.W = 0;
 
                 shininess = 128 * float.Parse(components[3][0]);
+                albedo = new Vector4(1f, 1f, 1f, 1f);
                 return;
             }
             throw new Exception("This material isn't listed");

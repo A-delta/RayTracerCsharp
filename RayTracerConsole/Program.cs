@@ -47,7 +47,7 @@ namespace RayTracer
                 }
             );
 
-            //AddRectangularLight(lights, .01f, .1f, new Vector3(-30, 15, 0), new Vector3(0, 15, 0));
+            AddRectangularLight(lights, .01f, .1f, new Vector3(-30, 15, 0), new Vector3(0, 15, 0));
 
             Image<Rgb24> img = rd.Render(objects, lights, new Image<Rgb24>(width, height));
             img.SaveAsPng("output.png");

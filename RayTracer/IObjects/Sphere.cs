@@ -5,21 +5,12 @@ public class Sphere : IObject
     public float radius { get; }
     public Material material { get; set; }
     public Vector3 center { get; set; }
-    public Color color { get; set; } = Color.AntiqueWhite;
 
     public Sphere(float radius, Vector3 center, Material material)
     {
         this.radius = radius;
         this.center = center;
         this.material = material;
-    }
-
-    public Sphere(float radius, Vector3 center, Material material, Color c)
-    {
-        this.radius = radius;
-        this.center = center;
-        this.material = material;
-        this.color = c;
     }
 
     public Vector3? RayIntersectPoint(Vector3 origin, Vector3 direction)

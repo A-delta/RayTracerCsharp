@@ -8,7 +8,7 @@ public class Renderer
     public Vector3 roation;
     public int height;
     public int width;
-    private Color bgColor = Color.DarkBlue;
+    private Color bgColor = Color.LightBlue;
 
     public Renderer(int width, int height, Vector3 position, Vector3 roation)
     {
@@ -100,7 +100,7 @@ public class Renderer
                 minDist = dist;
             }
         }
-        if (!isInter || depth > 8)
+        if (!isInter || depth > 4)
             return bgColor;
 
         inter = minInter;
@@ -120,7 +120,7 @@ public class Renderer
         //reflectedRay=(Vector3.Dot(reflectedRay, N)<0) ?
         Vector4 reflectionColor = CastRay(inter, reflectedRay, objects, lightSources, depth + 1)
             .ToVector4();
-        totalLight += reflectionColor * objectMaterial.albedo;
+        totalLight += reflectionColor * objectMaterial.albedo.X;
 
         // lights contributions
         foreach (LightSource light in lightSources)
@@ -146,12 +146,16 @@ public class Renderer
             R = Vector3.Normalize(2 * lightDotN * N - lightDir);
 
             totalLight +=
-                objectMaterial.diffuseComponent * Math.Max(-lightDotN, 0) * light.DiffuseComponent;
+                objectMaterial.diffuseComponent
+                * Math.Max(-lightDotN, 0)
+                * light.DiffuseComponent
+                * objectMaterial.albedo.Y;
 
             totalLight +=
                 objectMaterial.specularComponent
                 * (float)Math.Pow(Math.Max(0, Vector3.Dot(R, V)), objectMaterial.shininess)
-                * light.SpecularComponent;
+                * light.SpecularComponent
+                * objectMaterial.albedo.Z;
 
             totalLight += light.ambientComponent * objectMaterial.ambientComponent;
         }

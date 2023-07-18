@@ -16,9 +16,7 @@ public class Material
             Stream stream = File.Open("../RayTracer/materials.json", FileMode.Open, FileAccess.Read)
         )
         {
-            Dictionary<string, List<List<string>>> data = JsonSerializer.Deserialize<
-                Dictionary<string, List<List<string>>>
-            >(stream);
+            var data = JsonSerializer.Deserialize<Dictionary<string, List<List<string>>>>(stream);
             if (data.ContainsKey(materialName))
             {
                 var components = data[materialName];
@@ -28,18 +26,22 @@ public class Material
                 ambientComponent.Y = float.Parse(components[0][1]);
                 ambientComponent.W = 0;
 
-                diffuseComponent.X = float.Parse(components[1][0]);
-                diffuseComponent.Y = float.Parse(components[1][1]);
-                diffuseComponent.Z = float.Parse(components[1][2]);
-                diffuseComponent.W = 0;
-
-                specularComponent.X = float.Parse(components[2][0]);
-                specularComponent.Y = float.Parse(components[2][1]);
-                specularComponent.Z = float.Parse(components[2][2]);
+                specularComponent.X = float.Parse(components[1][0]);
+                specularComponent.Y = float.Parse(components[1][1]);
+                specularComponent.Z = float.Parse(components[1][2]);
                 specularComponent.W = 0;
 
-                shininess = 128 * float.Parse(components[3][0]);
-                albedo = new Vector4(1f, 1f, 1f, 1f);
+                diffuseComponent.X = float.Parse(components[2][0]);
+                diffuseComponent.Y = float.Parse(components[2][1]);
+                diffuseComponent.Z = float.Parse(components[2][2]);
+                diffuseComponent.W = 0;
+
+                albedo.X = float.Parse(components[3][0]);
+                albedo.Y = float.Parse(components[3][1]);
+                albedo.Z = float.Parse(components[3][2]);
+                albedo.W = 0;
+
+                shininess = 128 * float.Parse(components[4][0]);
                 return;
             }
             throw new Exception("This material isn't listed");

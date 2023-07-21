@@ -100,7 +100,7 @@ public class Renderer
                 minDist = dist;
             }
         }
-        if (!isInter || depth > 4)
+        if (!isInter || depth > 10)
             return bgColor;
 
         inter = minInter;
@@ -115,12 +115,30 @@ public class Renderer
         float lightDotN;
         Vector4 totalLight = new Vector4(0, 0, 0, 1);
 
-        // reflections
+        // reflection
         Vector3 reflectedRay = direction - 2f * N * Vector3.Dot(N, direction);
-        //reflectedRay=(Vector3.Dot(reflectedRay, N)<0) ?
-        Vector4 reflectionColor = CastRay(inter, reflectedRay, objects, lightSources, depth + 1)
+        Vector3 reflect_orig =
+            Vector3.Dot(reflectedRay, N) < 0 ? inter - N * .001f : inter + N * .001f;
+        Vector4 reflectionColor = CastRay(
+                reflect_orig,
+                reflectedRay,
+                objects,
+                lightSources,
+                depth + 1
+            )
             .ToVector4();
         totalLight += reflectionColor * objectMaterial.albedo.X;
+
+        //refraction
+        Vector3 refractedRay = Vector3.Normalize(
+            GetRefractedRay(direction, N, objectMaterial.refractionIndex)
+        );
+        Vector3 refract_orig =
+            Vector3.Dot(refractedRay, N) < 0 ? inter - N * .001f : inter + N * .001f;
+        Vector4 refractColor = CastRay(refract_orig, refractedRay, objects, lightSources, depth + 1)
+            .ToVector4();
+
+        totalLight += refractColor * objectMaterial.albedo.W;
 
         // lights contributions
         foreach (LightSource light in lightSources)
@@ -161,5 +179,23 @@ public class Renderer
         }
 
         return (Color)(totalLight);
+    }
+
+    private Vector3 GetRefractedRay(
+        Vector3 lightDirection,
+        Vector3 surfaceNormalVector,
+        float refractiveIndex
+    )
+    {
+        float c = -Math.Max(-1f, Math.Min(1f, Vector3.Dot(surfaceNormalVector, lightDirection)));
+        float r = 1f / refractiveIndex;
+        if (c < 0)
+        {
+            return GetRefractedRay(lightDirection, -surfaceNormalVector, 1 / refractiveIndex);
+        }
+        float k = 1 - r * r * (1 - c * c);
+        return k < 0
+            ? new Vector3(1, 0, 0)
+            : lightDirection * r + (float)(c * r - Math.Sqrt(k)) * surfaceNormalVector;
     }
 }

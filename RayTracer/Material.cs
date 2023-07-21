@@ -8,7 +8,8 @@ public class Material
         ambientComponent,
         diffuseComponent,
         albedo;
-    public float shininess;
+    public float shininess,
+        refractionIndex;
 
     public Material(string materialName)
     {
@@ -36,12 +37,13 @@ public class Material
                 diffuseComponent.Z = float.Parse(components[2][2]);
                 diffuseComponent.W = 0;
 
-                albedo.X = float.Parse(components[3][0]);
-                albedo.Y = float.Parse(components[3][1]);
-                albedo.Z = float.Parse(components[3][2]);
-                albedo.W = 0;
+                albedo.Y = float.Parse(components[3][0]); // diffuse
+                albedo.Z = float.Parse(components[3][1]); // specular
+                albedo.X = float.Parse(components[3][2]); // reflec
+                albedo.W = float.Parse(components[3][3]); // refrac
 
                 shininess = 128 * float.Parse(components[4][0]);
+                refractionIndex = float.Parse(components[4][1]);
                 return;
             }
             throw new Exception("This material isn't listed");

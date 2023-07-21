@@ -14,8 +14,10 @@ namespace RayTracer
             //List<IObject> objects = GetAxis(50f);
             var objects = new List<IObject>();
             objects.Add(new Sphere(15f, new Vector3(50f, 20f, -16f), new Material("obsidian")));
-            objects.Add(new Sphere(15f, new Vector3(-20f, 10f, -5f), new Material("mirror")));
+            objects.Add(new Sphere(15f, new Vector3(-20f, 10f, -5f), new Material("glass")));
             objects.Add(new Sphere(4f, new Vector3(0, -15, 0), new Material("ruby")));
+
+            objects.Add(new Sphere(4f, new Vector3(-10f, 10f, -50f), new Material("ruby")));
 
             //objects.Add(new Sphere(4f, new Vector3(15f, 10f, 35), new Material("copper")));
 

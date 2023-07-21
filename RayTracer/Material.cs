@@ -36,10 +36,10 @@ public class Material
                 diffuseComponent.Z = float.Parse(components[2][2]);
                 diffuseComponent.W = 0;
 
-                albedo.X = float.Parse(components[3][0]);
-                albedo.Y = float.Parse(components[3][1]);
-                albedo.Z = float.Parse(components[3][2]);
-                albedo.W = 0;
+                albedo.X = float.Parse(components[3][0]); // reflec
+                albedo.Y = float.Parse(components[3][1]); // diff
+                albedo.Z = float.Parse(components[3][2]); // spec
+                albedo.W = 0; // refrac
 
                 shininess = 128 * float.Parse(components[4][0]);
                 return;

@@ -8,7 +8,7 @@ public class Renderer
     public Vector3 roation;
     public int height;
     public int width;
-    private Color bgColor = Color.LightBlue;
+    private Color bgColor = Color.Black;
 
     public Renderer(int width, int height, Vector3 position, Vector3 roation)
     {
@@ -88,6 +88,7 @@ public class Renderer
         {
             potentialIntersection = objects[i].RayIntersectPoint(origin, direction);
             if (potentialIntersection is null)
+
                 continue;
 
             isInter = true;
@@ -100,7 +101,8 @@ public class Renderer
                 minDist = dist;
             }
         }
-        if (!isInter || depth > 4)
+
+        if (!isInter || depth > 4 || minDist > 300)
             return bgColor;
 
         inter = minInter;
@@ -127,11 +129,19 @@ public class Renderer
         {
             V = Vector3.Normalize(inter - origin);
             lightDir = Vector3.Normalize(inter - light.position);
-            inShadow = false;
+
             // shadows
+            inShadow = false;
+            minDist = (light.position - inter).Length();
             for (int i = 0; i < objects.Count(); i++)
             {
-                if (i != min && objects[i].RayIntersect(light.position, lightDir))
+                if (i == min)
+                    continue;
+                var interPoint = objects[i].RayIntersectPoint(light.position, lightDir);
+                if (interPoint == null)
+                    continue;
+                dist = ((Vector3)interPoint - light.position).Length();
+                if (dist < minDist)
                 {
                     inShadow = true;
                     break;

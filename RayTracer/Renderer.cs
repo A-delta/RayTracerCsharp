@@ -119,11 +119,13 @@ public class Renderer
         Vector4 totalLight = new Vector4(0, 0, 0, 1);
 
         // reflections
-        Vector3 reflectedRay = direction - 2f * N * Vector3.Dot(N, direction);
-        //reflectedRay=(Vector3.Dot(reflectedRay, N)<0) ?
-        Vector4 reflectionColor = CastRay(inter, reflectedRay, objects, lightSources, depth + 1)
-            .ToVector4();
-        totalLight += reflectionColor * objectMaterial.albedo.X;
+        if (depth < REFLEC_NB)
+        {
+            Vector3 reflectedRay = direction - 2f * N * Vector3.Dot(N, direction);
+            Vector4 reflectionColor = CastRay(inter, reflectedRay, objects, lightSources, depth + 1)
+                .ToVector4();
+            totalLight += reflectionColor * objectMaterial.albedo.X;
+        }
 
         // lights contributions
         foreach (LightSource light in lightSources)
@@ -155,7 +157,6 @@ public class Renderer
 
             lightDotN = Vector3.Dot(lightDir, N);
             R = Vector3.Normalize(2 * lightDotN * N - lightDir);
-
             totalLight +=
                 objectMaterial.diffuseComponent
                 * Math.Max(-lightDotN, 0)

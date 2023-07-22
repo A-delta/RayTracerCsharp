@@ -9,10 +9,6 @@ public static class STLReader
 
         string solidName = (stream.ReadLine() ?? "").Split(" ")[1];
 
-        var max_x = 0f;
-        var max_y = 0f;
-        var max_z = 0f;
-
         int limit = 26;
         while (!stream.EndOfStream && limit > 0)
         {

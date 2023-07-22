@@ -9,6 +9,7 @@ public class Renderer
     public int height;
     public int width;
     private Color bgColor = Color.Black;
+    private int REFLEC_NB = 0;
 
     public Renderer(int width, int height, Vector3 position, Vector3 roation)
     {
@@ -102,7 +103,7 @@ public class Renderer
             }
         }
 
-        if (!isInter || depth > 4 || minDist > 300)
+        if (!isInter || depth > REFLEC_NB || minDist > 300)
             return bgColor;
 
         inter = minInter;
@@ -110,7 +111,7 @@ public class Renderer
         bool inShadow = false;
 
         Material objectMaterial = objects[min].material;
-        Vector3 N = objects[min].GetNormalVector(inter);
+        Vector3 N = objects[min].GetNormalVector(inter, -direction);
         Vector3 V,
             lightDir,
             R;

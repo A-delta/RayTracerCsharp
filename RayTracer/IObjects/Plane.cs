@@ -19,7 +19,7 @@ public class Plane : IObject
         throw new NotImplementedException();
     }
 
-    public Vector3 GetNormalVector(Vector3 point)
+    public Vector3 GetNormalVector(Vector3 point, Vector3 direction)
     {
         return n;
     }

@@ -38,7 +38,7 @@ public class Sphere : IObject
 
     public bool IsInSphere(Vector3 pos) => Vector3.Distance(center, pos) <= radius;
 
-    public Vector3 GetNormalVector(Vector3 origin)
+    public Vector3 GetNormalVector(Vector3 origin, Vector3 direction)
     {
         return Vector3.Normalize(origin - center);
     }

@@ -5,7 +5,7 @@ public class Renderer
 {
     public double fieldViewAngle = System.Math.PI / 4;
     public Vector3 position;
-    public Vector3 roation;
+    public Vector3 rotation;
     public int height;
     public int width;
     private Color bgColor = Color.Black;
@@ -16,7 +16,7 @@ public class Renderer
         this.height = height;
         this.width = width;
         this.position = position;
-        this.roation = new Vector3(0, 0, 0);
+        this.rotation = new Vector3(0, 0, 0);
     }
 
     public Image<Rgb24> Render(
@@ -76,14 +76,14 @@ public class Renderer
         int min = 0;
 
         //fix to see light sources, should make it clean by attaching spheres to light sources ? or just IObjects
-        foreach (var l in lightSources)
-        {
-            Sphere s = new Sphere(.3f, l.position, null);
-            if (s.RayIntersect(origin, direction))
-            {
-                return new Rgb24(255, 255, 255);
-            }
-        }
+        // foreach (var l in lightSources)
+        // {
+        //     Sphere s = new Sphere(.3f, l.position, null);
+        //     if (s.RayIntersect(origin, direction))
+        //     {
+        //         return new Rgb24(255, 255, 255);
+        //     }
+        // }
 
         for (int i = 0; i < objects.Count; i++)
         {

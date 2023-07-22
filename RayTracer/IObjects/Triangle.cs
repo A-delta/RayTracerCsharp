@@ -52,26 +52,42 @@ public class Triangle : IObject
         var test = (float aA, float bA, float aP, float bP) => aA * bP - bA * aP;
         float u = 0;
         float s = 0;
-        if ((Math.Abs(A.X - B.X) <= 1e-6 && Math.Abs(B.X - C.X) <= 1e-6))
+        float d;
+        if (
+            (
+                Math.Abs(A.X - B.X) <= 1e-1
+                || Math.Abs(A.X - C.X) <= 1e-1
+                || Math.Abs(B.X - C.X) <= 1e-1
+            )
+        )
         {
             s = test(CA.Z, CA.Y, CP.Z, CP.Y);
             u = test(AB.Z, AB.Y, AP.Z, AP.Y);
+
+            d = (C.Z - B.Z) * (p.Y - B.Y) - (C.Y - B.Y) * (p.Z - B.Z);
         }
-        else if ((A.Y - B.Y <= 1e-6 && B.Y - C.Y <= 1e-6))
+        else if (
+            (
+                Math.Abs(A.Y - B.Y) <= 1e-1
+                || Math.Abs(A.Y - C.Y) <= 1e-1
+                || Math.Abs(B.Y - C.Y) <= 1e-1
+            )
+        )
         {
             s = test(CA.Z, CA.X, CP.Z, CP.X);
             u = test(AB.Z, AB.X, AP.Z, AP.X);
+            d = (C.Z - B.Z) * (p.X - B.X) - (C.X - B.X) * (p.Z - B.Z);
         }
         else
         {
-            s = test(CA.Y, CA.X, CP.Y, CP.X);
-            u = test(AB.Y, AB.X, AP.Y, AP.X);
+            s = test(CA.X, CA.Y, CP.X, CP.Y);
+            u = test(AB.X, AB.Y, AP.X, AP.Y);
+            d = (C.X - B.X) * (p.Y - B.Y) - (C.Y - B.Y) * (p.X - B.X);
         }
 
         if ((s <= 1e-6) ^ (u <= 1e-6))
             return null;
 
-        var d = (C.Z - B.Z) * (p.Y - B.Y) - (C.Y - B.Y) * (p.Z - B.Z);
         return (!(d <= 1e-6 ^ (s + u <= 1e-6))) ? p : null;
     }
 

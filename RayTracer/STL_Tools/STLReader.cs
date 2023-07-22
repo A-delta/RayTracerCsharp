@@ -9,10 +9,8 @@ public static class STLReader
 
         string solidName = (stream.ReadLine() ?? "").Split(" ")[1];
 
-        int limit = 26;
-        while (!stream.EndOfStream && limit > 0)
+        while (!stream.EndOfStream)
         {
-            limit--;
             var data = (stream.ReadLine() ?? "").Trim();
             if (data.Contains("endsolid"))
                 break;

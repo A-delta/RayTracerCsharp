@@ -56,4 +56,11 @@ public class Triangle : IObject
     {
         throw new NotImplementedException(); // barycentre --> newPosition
     }
+
+    public Vector3 GetPosition() => (A + B + C) / 3;
+
+    public void PrintInformation()
+    {
+        Console.WriteLine(A + "\t" + B + "\t" + C);
+    }
 }

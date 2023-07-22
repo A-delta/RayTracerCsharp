@@ -37,8 +37,15 @@ public class Plane : IObject
         return origin + t * direction;
     }
 
+    public Vector3 GetPosition() => p0;
+
     public void SetPosition(Vector3 newPosition)
     {
         p0 = newPosition;
+    }
+
+    public void PrintInformation()
+    {
+        Console.WriteLine(p0 + "\t" + n);
     }
 }

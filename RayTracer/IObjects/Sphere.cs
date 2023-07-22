@@ -45,5 +45,12 @@ public class Sphere : IObject
 
     public void ApplyForce(Vector3 force) => center += force;
 
+    public Vector3 GetPosition() => center;
+
     public void SetPosition(Vector3 newPosition) => center = newPosition;
+
+    public void PrintInformation()
+    {
+        Console.WriteLine(center + "\t" + radius);
+    }
 }

@@ -55,9 +55,9 @@ public class Triangle : IObject
         float d;
         if (
             (
-                Math.Abs(A.X - B.X) <= 1e-1
-                || Math.Abs(A.X - C.X) <= 1e-1
-                || Math.Abs(B.X - C.X) <= 1e-1
+                Math.Abs(A.X - B.X) <= 1e-6
+                && Math.Abs(A.X - C.X) <= 1e-6
+                && Math.Abs(B.X - C.X) <= 1e-6
             )
         )
         {
@@ -68,9 +68,9 @@ public class Triangle : IObject
         }
         else if (
             (
-                Math.Abs(A.Y - B.Y) <= 1e-1
-                || Math.Abs(A.Y - C.Y) <= 1e-1
-                || Math.Abs(B.Y - C.Y) <= 1e-1
+                Math.Abs(A.Y - B.Y) <= 1e-6
+                && Math.Abs(A.Y - C.Y) <= 1e-6
+                && Math.Abs(B.Y - C.Y) <= 1e-6
             )
         )
         {
@@ -85,7 +85,7 @@ public class Triangle : IObject
             d = (C.X - B.X) * (p.Y - B.Y) - (C.Y - B.Y) * (p.X - B.X);
         }
 
-        if ((s <= 1e-6) ^ (u <= 1e-6))
+        if (((s <= 1e-6) ^ (u <= 1e-6)))
             return null;
 
         return (!(d <= 1e-6 ^ (s + u <= 1e-6))) ? p : null;

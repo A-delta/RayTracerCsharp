@@ -9,22 +9,20 @@ namespace RayTracer
         {
             int height = 1080;
             int width = height * 16 / 9;
-            Renderer rd = new Renderer(width, height, new Vector3(0, 0, 300), new Vector3(0, 0, 0));
+            Renderer rd = new Renderer(
+                width,
+                height,
+                new Vector3(-50, 0, 300),
+                new Vector3(0, 0, 0)
+            );
 
-            var objects = STLReader.ReadFile("lapin_ascii.stl");
+            var objects = STLReader.ReadFile("lapin_ascii_42.stl");
+
+            objects.Add(new Sphere(15f, new Vector3(25, 10, 100), new Material("emerald")));
 
             var lights = new List<LightSource>();
-            lights.Add(
-                new LightSource()
-                {
-                    position = rd.position + new Vector3(0, 0, -10),
-                    ambientComponent = new Vector4(.2f, .2f, .2f, .2f),
-                    DiffuseComponent = new Vector4(1f, 1f, 1f, 1f),
-                    SpecularComponent = new Vector4(1f, 1f, 1f, 1f)
-                }
-            );
-            //AddRectangularLight(lights, .8f, new Vector3(-20, 30, 0), new Vector3(20, 30, 0));
 
+            AddRectangularLight(lights, 5f, new Vector3(-30, -65, 100), new Vector3(30, -65, 100));
 
             var img = rd.Render(objects, lights, new Image<Rgb24>(width, height));
             img.SaveAsPng("output.png");

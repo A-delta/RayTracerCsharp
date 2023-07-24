@@ -10,6 +10,7 @@ public class Renderer
     public int width;
     private Color bgColor = Color.Black;
     private int REFLEC_NB = 0;
+    private float progress = 0;
 
     public Renderer(int width, int height, Vector3 position, Vector3 roation)
     {
@@ -27,6 +28,9 @@ public class Renderer
     {
         float AspectRatio = (float)width / height;
         float theta = (float)System.Math.Tan(fieldViewAngle / 2);
+
+        var t = new Thread(DisplayProgress);
+        t.Start();
 
         Parallel.For(
             0,
@@ -50,12 +54,32 @@ public class Renderer
                             lightSources,
                             0
                         );
+                        progress++;
                     }
                 );
             }
         );
 
+        progress = width * height;
+        Thread.Sleep(10);
+        t.Interrupt();
+
         return img;
+    }
+
+    private void DisplayProgress()
+    {
+        var c = new Stopwatch();
+        c.Start();
+        while (true)
+        {
+            var perc = Math.Round(100 * progress / (width * height), 1);
+            var eta = (int)(
+                width * height * c.Elapsed.TotalSeconds / progress - c.Elapsed.TotalSeconds
+            );
+            Console.Write($"\r{perc}%\tETA: {eta}s         ");
+            Thread.Sleep(600);
+        }
     }
 
     private Rgb24 CastRay(

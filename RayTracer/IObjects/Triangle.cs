@@ -31,11 +31,24 @@ public class Triangle : IObject
 
     public bool RayIntersect(Vector3 origin, Vector3 direction)
     {
-        return RayIntersectPoint(origin, direction) is not null;
+        var test = (Vector3 A, Vector3 B, Vector3 C, Vector3 D, Vector3 p) =>
+        {
+            var normal = Vector3.Cross(B - A, C - A);
+            float dotD = Vector3.Dot(normal, D - A);
+            float dotP = Vector3.Dot(normal, p - A);
+            return Math.Sign(dotD) == Math.Sign(dotP);
+        };
+
+        return test(A, B, C, origin, origin + direction)
+            && test(B, C, origin, A, origin + direction)
+            && test(C, origin, A, B, origin + direction)
+            && test(origin, A, B, C, origin + direction);
     }
 
     public Vector3? RayIntersectPoint(Vector3 origin, Vector3 direction)
     {
+        if (!RayIntersect(origin, direction))
+            return null;
         var n = GetNormalVector(origin, -direction);
 
         if (Vector3.Dot(n, -direction) < 1e-6)
@@ -43,52 +56,7 @@ public class Triangle : IObject
         float t = Vector3.Dot(((A + B + C) / 3 - origin), n) / (Vector3.Dot(direction, n));
         var p = origin + t * direction;
 
-        var CA = A - C;
-        var CP = p - C;
-
-        var AB = B - A;
-        var AP = p - A;
-
-        var test = (float aA, float bA, float aP, float bP) => aA * bP - bA * aP;
-        float u = 0;
-        float s = 0;
-        float d;
-        if (
-            (
-                Math.Abs(A.X - B.X) <= 1e-6
-                && Math.Abs(A.X - C.X) <= 1e-6
-                && Math.Abs(B.X - C.X) <= 1e-6
-            )
-        )
-        {
-            s = test(CA.Z, CA.Y, CP.Z, CP.Y);
-            u = test(AB.Z, AB.Y, AP.Z, AP.Y);
-
-            d = (C.Z - B.Z) * (p.Y - B.Y) - (C.Y - B.Y) * (p.Z - B.Z);
-        }
-        else if (
-            (
-                Math.Abs(A.Y - B.Y) <= 1e-6
-                && Math.Abs(A.Y - C.Y) <= 1e-6
-                && Math.Abs(B.Y - C.Y) <= 1e-6
-            )
-        )
-        {
-            s = test(CA.Z, CA.X, CP.Z, CP.X);
-            u = test(AB.Z, AB.X, AP.Z, AP.X);
-            d = (C.Z - B.Z) * (p.X - B.X) - (C.X - B.X) * (p.Z - B.Z);
-        }
-        else
-        {
-            s = test(CA.X, CA.Y, CP.X, CP.Y);
-            u = test(AB.X, AB.Y, AP.X, AP.Y);
-            d = (C.X - B.X) * (p.Y - B.Y) - (C.Y - B.Y) * (p.X - B.X);
-        }
-
-        if (((s <= 1e-6) ^ (u <= 1e-6)))
-            return null;
-
-        return (!(d <= 1e-6 ^ (s + u <= 1e-6))) ? p : null;
+        return p;
     }
 
     public void SetPosition(Vector3 newPosition)

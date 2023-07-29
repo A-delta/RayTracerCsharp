@@ -1,11 +1,11 @@
 # RayTracerCsharp
 A RayTracing renderer written in C#. \
-I do not intend to "finish" this project, I use it to learn more about RayTracing and to get back to C#after a while. \
-I *may* add refraction to the model as well as camera rotations.
+I do not intend to "finish" this project, I used it to learn more about RayTracing and to get back to C# after a while. \
+I *may* add refraction to the model as well as camera rotations later.
 
 ## Examples
 
-### Simple Image
+### Simple image
 
 ![output](https://github.com/A-delta/RayTracerCsharp/assets/55986107/bd0b1453-93ce-4c72-b485-cdfcf04f6202)
 The STLReader only reads ASCII STL files, the file used is not provided (there are plenty available for free online).

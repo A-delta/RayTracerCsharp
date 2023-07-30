@@ -9,7 +9,7 @@ public class Renderer
     public int height;
     public int width;
     private Color bgColor = Color.Black;
-    private int REFLEC_NB = 0;
+    private int REFLEC_NB = 4;
     private float progress = 0;
 
     public Renderer(int width, int height, Vector3 position, Vector3 roation)
@@ -20,11 +20,7 @@ public class Renderer
         this.rotation = new Vector3(0, 0, 0);
     }
 
-    public Image<Rgb24> Render(
-        List<IObject> objects,
-        List<LightSource> lightSources,
-        Image<Rgb24> img
-    )
+    public Image<Rgb24> Render(List<IObject> objects, List<LightSource> lightSources, Image<Rgb24> img)
     {
         float AspectRatio = (float)width / height;
         float theta = (float)System.Math.Tan(fieldViewAngle / 2);
@@ -47,13 +43,7 @@ public class Renderer
                         float y = -((2 * (i + 0.5f) / height - 1) * theta);
                         Vector3 direction = new Vector3(x, y, -1);
 
-                        img[j, i] = CastRay(
-                            position,
-                            Vector3.Normalize(direction),
-                            objects,
-                            lightSources,
-                            0
-                        );
+                        img[j, i] = CastRay(position, Vector3.Normalize(direction), objects, lightSources, 0);
                         progress++;
                     }
                 );
@@ -61,9 +51,7 @@ public class Renderer
         );
 
         progress = width * height;
-        Thread.Sleep(10);
-        t.Interrupt();
-
+        t.Join();
         return img;
     }
 
@@ -71,15 +59,16 @@ public class Renderer
     {
         var c = new Stopwatch();
         c.Start();
-        while (true)
+        do
         {
-            var perc = Math.Round(100 * progress / (width * height), 1);
-            var eta = (int)(
-                width * height * c.Elapsed.TotalSeconds / progress - c.Elapsed.TotalSeconds
-            );
-            Console.Write($"\r{perc}%\tETA: {eta}s         ");
+            var perc = Math.Round(100 * progress / (width * height), 0);
+            var eta = (int)(width * height * c.Elapsed.TotalSeconds / progress - c.Elapsed.TotalSeconds);
+            Console.Write($"\r{perc}%\tETA: {eta}s            ");
             Thread.Sleep(600);
-        }
+        } while (width * height - progress > 1e-6);
+        c.Stop();
+        Console.Write("\rComputation time: " + c.Elapsed);
+        return;
     }
 
     private Rgb24 CastRay(
@@ -102,7 +91,7 @@ public class Renderer
         //fix to see light sources, should make it clean by attaching spheres to light sources ? or just IObjects
         // foreach (var l in lightSources)
         // {
-        //     Sphere s = new Sphere(.3f, l.position, null);
+        //     Sphere s = new Sphere((origin - l.position).Length() * 20 / 300, l.position, null);
         //     if (s.RayIntersect(origin, direction))
         //     {
         //         return new Rgb24(255, 255, 255);
@@ -127,7 +116,7 @@ public class Renderer
             }
         }
 
-        if (!isInter || depth > REFLEC_NB || minDist > 300)
+        if (!isInter || depth > REFLEC_NB) // || minDist > 300)
             return bgColor;
 
         inter = minInter;
@@ -146,7 +135,13 @@ public class Renderer
         if (depth < REFLEC_NB)
         {
             Vector3 reflectedRay = direction - 2f * N * Vector3.Dot(N, direction);
-            Vector4 reflectionColor = CastRay(inter, reflectedRay, objects, lightSources, depth + 1)
+            Vector4 reflectionColor = CastRay(
+                    inter,
+                    Vector3.Normalize(reflectedRay),
+                    objects,
+                    lightSources,
+                    depth + 1
+                )
                 .ToVector4();
             totalLight += reflectionColor * objectMaterial.albedo.X;
         }

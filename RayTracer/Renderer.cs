@@ -88,11 +88,9 @@ public class Renderer
 
         int min = 0;
 
-        //fix to see light sources, should make it clean by attaching spheres to light sources ? or just IObjects
         foreach (var l in lightSources)
         {
-            Sphere s = new Sphere((origin - l.position).Length() * 20 / 300, l.position, null);
-            if (s.RayIntersect(origin, direction))
+            if (l.Body.RayIntersect(origin, direction))
             {
                 return new Rgb24(255, 255, 255);
             }
@@ -150,19 +148,20 @@ public class Renderer
         foreach (LightSource light in lightSources)
         {
             V = Vector3.Normalize(inter - origin);
-            lightDir = Vector3.Normalize(inter - light.position);
+            var lightPosition = light.Body.GetPosition();
+            lightDir = Vector3.Normalize(inter - lightPosition);
 
             // shadows
             inShadow = false;
-            minDist = (light.position - inter).Length();
+            minDist = (lightPosition - inter).Length();
             for (int i = 0; i < objects.Count(); i++)
             {
                 if (i == min)
                     continue;
-                var interPoint = objects[i].RayIntersectPoint(light.position, lightDir);
+                var interPoint = objects[i].RayIntersectPoint(lightPosition, lightDir);
                 if (interPoint == null)
                     continue;
-                dist = ((Vector3)interPoint - light.position).Length();
+                dist = ((Vector3)interPoint - lightPosition).Length();
                 if (dist < minDist)
                 {
                     inShadow = true;

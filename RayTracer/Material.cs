@@ -45,6 +45,7 @@ public class Material
                     return;
                 }
                 Console.Error.WriteLine("This material isn't listed in the provided file");
+                Environment.Exit(20);
             }
         }
         catch (DirectoryNotFoundException)

@@ -187,7 +187,7 @@ public class Renderer
                 * light.SpecularComponent
                 * objectMaterial.albedo.Z;
 
-            totalLight += light.ambientComponent * objectMaterial.ambientComponent;
+            totalLight += light.AmbientComponent * objectMaterial.ambientComponent;
         }
 
         return (Color)(totalLight);

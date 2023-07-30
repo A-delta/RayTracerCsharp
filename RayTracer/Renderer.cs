@@ -20,7 +20,7 @@ public class Renderer
         this.rotation = new Vector3(0, 0, 0);
     }
 
-    public Image<Rgb24> Render(List<IObject> objects, List<LightSource> lightSources, Image<Rgb24> img)
+    public Image<Rgb24> Render(IObject[] objects, LightSource[] lightSources, Image<Rgb24> img)
     {
         float AspectRatio = (float)width / height;
         float theta = (float)System.Math.Tan(fieldViewAngle / 2);
@@ -74,8 +74,8 @@ public class Renderer
     private Rgb24 CastRay(
         Vector3 origin,
         Vector3 direction,
-        List<IObject> objects,
-        List<LightSource> lightSources,
+        IObject[] objects,
+        LightSource[] lightSources,
         int depth
     )
     {
@@ -89,16 +89,16 @@ public class Renderer
         int min = 0;
 
         //fix to see light sources, should make it clean by attaching spheres to light sources ? or just IObjects
-        // foreach (var l in lightSources)
-        // {
-        //     Sphere s = new Sphere((origin - l.position).Length() * 20 / 300, l.position, null);
-        //     if (s.RayIntersect(origin, direction))
-        //     {
-        //         return new Rgb24(255, 255, 255);
-        //     }
-        // }
+        foreach (var l in lightSources)
+        {
+            Sphere s = new Sphere((origin - l.position).Length() * 20 / 300, l.position, null);
+            if (s.RayIntersect(origin, direction))
+            {
+                return new Rgb24(255, 255, 255);
+            }
+        }
 
-        for (int i = 0; i < objects.Count; i++)
+        for (int i = 0; i < objects.Length; i++)
         {
             potentialIntersection = objects[i].RayIntersectPoint(origin, direction);
             if (potentialIntersection is null)

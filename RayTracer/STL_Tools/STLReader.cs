@@ -2,7 +2,7 @@ using System.Numerics;
 
 public static class STLReader
 {
-    public static List<IObject> ReadFile(string filename)
+    public static List<IObject> ReadFile(string filename, Material mat)
     {
         var meshes = new List<IObject>();
         var stream = new StreamReader(filename);
@@ -15,40 +15,25 @@ public static class STLReader
             if (data.Contains("endsolid"))
                 break;
 
-            // else data contains the normal vector coords
-
-
-
             data = stream.ReadLine(); // "outer loop"
             data = (stream.ReadLine() ?? "").Trim();
             var coords = data.Split(' ');
-            var A = new Vector3(
-                float.Parse(coords[1]),
-                float.Parse(coords[2]),
-                float.Parse(coords[3])
-            );
+            var A = new Vector3(float.Parse(coords[1]), float.Parse(coords[2]), float.Parse(coords[3]));
 
             data = (stream.ReadLine() ?? "").Trim();
             coords = data.Split(' ');
-            var B = new Vector3(
-                float.Parse(coords[1]),
-                float.Parse(coords[2]),
-                float.Parse(coords[3])
-            );
+            var B = new Vector3(float.Parse(coords[1]), float.Parse(coords[2]), float.Parse(coords[3]));
 
             data = (stream.ReadLine() ?? "").Trim();
             coords = data.Split(' ');
-            var C = new Vector3(
-                float.Parse(coords[1]),
-                float.Parse(coords[2]),
-                float.Parse(coords[3])
-            );
+            var C = new Vector3(float.Parse(coords[1]), float.Parse(coords[2]), float.Parse(coords[3]));
             data = stream.ReadLine(); // jump endloop
             data = stream.ReadLine(); // jump endfacet
-            data = stream.ReadLine(); // jump \n
+            //data = stream.ReadLine(); // jump \n
 
-            meshes.Add(new Triangle(A, B, C, new Material("ruby")));
+            meshes.Add(new Triangle(A, B, C, mat));
         }
+        Console.WriteLine($"Loaded {meshes.Count()} triangles");
         return meshes;
     }
 }

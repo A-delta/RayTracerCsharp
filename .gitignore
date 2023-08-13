@@ -45,3 +45,5 @@ msbuild.wrn
 *.manifest
 .config/
 Content/
+
+.direnv/

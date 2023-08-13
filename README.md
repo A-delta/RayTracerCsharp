@@ -74,10 +74,8 @@ https://github.com/A-delta/RayTracerCsharp/assets/55986107/6e54da94-d585-47bf-80
 ![image](https://github.com/A-delta/RayTracerCsharp/assets/55986107/27484128-7330-438d-af86-21ff457cf178)
 ![image](https://github.com/A-delta/RayTracerCsharp/assets/55986107/42df23c3-b2a4-4a7a-aad4-4001c4f2c0b6)
 ![image](https://github.com/A-delta/RayTracerCsharp/assets/55986107/a4f5f988-2832-4f4c-8e1d-0882e5cd57b5)
-(there were bugs ofc 🥲)
+*b u g s*
 ![image](https://github.com/A-delta/RayTracerCsharp/assets/55986107/2510838f-99b2-41ae-b01c-89e1cfd1c96d)
-(but they usually got fixed)
-
 ![image](https://github.com/A-delta/RayTracerCsharp/assets/55986107/b3ca122e-844c-4775-bdfa-0da645f24661)
 
 

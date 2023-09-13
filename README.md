@@ -44,9 +44,9 @@ img.SaveAsPng("output.png");
 ### A more complex animation
 https://github.com/A-delta/RayTracerCsharp/assets/55986107/6e54da94-d585-47bf-802f-2c359aa153d3
 
-*(Didn't save the code)*
+*(Didn't save the code :x)*
 
-## A illustrated evolution of the program
+## An illustrated evolution of the program
 
 ![](https://github.com/A-delta/RayTracerCsharp/blob/b662bd1d163d486fe75fc69e6113c5669ba47205/test.png?raw=true)
 ![](https://github.com/A-delta/RayTracerCsharp/blob/1dda5aea6d3228cafababe0ef6232605ef58e423/test.png?raw=true)

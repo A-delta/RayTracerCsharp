@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace RayTracer
 {
@@ -11,41 +10,18 @@ namespace RayTracer
             int width = height * 16 / 9;
             var rd = new Renderer(width, height, new Vector3(0, 0, 100), Vector3.Zero);
 
-            var objects = STLReader.ReadFile(
-                "treefrog_45_cut.stl",
-                new Material("ruby", "../RayTracer/materials.json")
-            );
+            var objects = new List<IObject>();
+            objects.Add(new Sphere(20, Vector3.Zero, new Material("ruby", "../RayTracer/materials.json")));
+
             var l = Vector4.One * 10;
-            var lights = new List<LightSource>()
-            {
-                new LightSource()
-                {
-                    ambientComponent = l * .1f,
-                    SpecularComponent = l,
-                    DiffuseComponent = l,
-                    Body = new Sphere(
-                        5f,
-                        new Vector3(-30, 0, 60),
-                        new Material("reflect_only", "../RayTracer/materials.json")
-                    )
-                },
-                new LightSource()
-                {
-                    ambientComponent = l * .1f,
-                    SpecularComponent = l,
-                    DiffuseComponent = l,
-                    Body = new Sphere(
-                        5f,
-                        new Vector3(50, 0, 0),
-                        new Material("reflect_only", "../RayTracer/materials.json")
-                    )
-                },
-            };
+            var lights = new List<LightSource>();
+            lights.Add(new LightSource(l, new Vector3(30, 0, 20), new Material("ruby", "../RayTracer/materials.json")));
+
             rd.Render(objects.ToArray(), lights.ToArray(), new Image<Rgb24>(width, height))
                 .SaveAsPng("output.png");
         }
 
-        private static void AddRectangularLight(
+        /*private static void AddRectangularLight(
             List<LightSource> lights,
             float step,
             Vector3 start,
@@ -88,6 +64,6 @@ namespace RayTracer
                 new Sphere(1f, new Vector3(0, 0, -point), mat),
                 new Sphere(1f, new Vector3(0, 0, point), mat),
             };
-        }
+        }*/
     }
 }
